@@ -2,7 +2,6 @@
  * File:        pagesegmain.cpp
  * Description: Top-level page segmenter for Tesseract.
  * Author:      Ray Smith
- * Created:     Thu Sep 25 17:12:01 PDT 2008
  *
  * (C) Copyright 2008, Google Inc.
  ** Licensed under the Apache License, Version 2.0 (the "License");
@@ -39,7 +38,7 @@
 #include "imagefind.h"
 #include "linefind.h"
 #include "makerow.h"
-#include "osdetect.h"
+#include <tesseract/osdetect.h>
 #include "tabvector.h"
 #include "tesseractclass.h"
 #include "tessvars.h"
@@ -103,22 +102,22 @@ int Tesseract::SegmentPage(const STRING* input_file, BLOCK_LIST* blocks,
   int width = pixGetWidth(pix_binary_);
   int height = pixGetHeight(pix_binary_);
   // Get page segmentation mode.
-  PageSegMode pageseg_mode = static_cast<PageSegMode>(
+  auto pageseg_mode = static_cast<PageSegMode>(
       static_cast<int>(tessedit_pageseg_mode));
   // If a UNLV zone file can be found, use that instead of segmentation.
   if (!PSM_COL_FIND_ENABLED(pageseg_mode) &&
       input_file != nullptr && input_file->length() > 0) {
     STRING name = *input_file;
-    const char* lastdot = strrchr(name.string(), '.');
+    const char* lastdot = strrchr(name.c_str(), '.');
     if (lastdot != nullptr)
-      name[lastdot - name.string()] = '\0';
+      name[lastdot - name.c_str()] = '\0';
     read_unlv_file(name, width, height, blocks);
   }
   if (blocks->empty()) {
     // No UNLV file present. Work according to the PageSegMode.
     // First make a single block covering the whole image.
     BLOCK_IT block_it(blocks);
-    BLOCK* block = new BLOCK("", TRUE, 0, 0, 0, 0, width, height);
+    auto* block = new BLOCK("", true, 0, 0, 0, 0, width, height);
     block->set_right_to_left(right_to_left());
     block_it.add_to_end(block);
   } else {
@@ -210,7 +209,7 @@ int Tesseract::AutoPageSeg(PageSegMode pageseg_mode, BLOCK_LIST* blocks,
 
   ColumnFinder* finder = SetupPageSegAndDetectOrientation(
       pageseg_mode, blocks, osd_tess, osr, &temp_blocks, &photomask_pix,
-      &musicmask_pix);
+      pageseg_apply_music_mask ? &musicmask_pix : nullptr);
   int result = 0;
   if (finder != nullptr) {
     TO_BLOCK_IT to_block_it(&temp_blocks);
@@ -334,7 +333,7 @@ ColumnFinder* Tesseract::SetupPageSegAndDetectOrientation(
 
     BLOBNBOX_CLIST osd_blobs;
     // osd_orientation is the number of 90 degree rotations to make the
-    // characters upright. (See osdetect.h for precise definition.)
+    // characters upright. (See tesseract/osdetect.h for precise definition.)
     // We want the text lines horizontal, (vertical text indicates vertical
     // textlines) which may conflict (eg vertically written CJK).
     int osd_orientation = 0;

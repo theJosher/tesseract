@@ -1,4 +1,6 @@
-AM_CPPFLAGS += -I$(top_srcdir)/src/ccutil
+AM_CPPFLAGS += \
+  -I$(top_srcdir)/include \
+  -I$(top_srcdir)/src/ccutil
 
 if VISIBILITY
 AM_CPPFLAGS += -DTESS_EXPORTS \
@@ -11,4 +13,6 @@ noinst_HEADERS = \
 noinst_LTLIBRARIES = libtesseract_viewer.la
 
 libtesseract_viewer_la_SOURCES = \
-    scrollview.cpp svmnode.cpp svutil.cpp svpaint.cpp
+    scrollview.cpp svmnode.cpp svutil.cpp
+
+# TODO: Add rule to generate svpaint from svpaint.cpp.

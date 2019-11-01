@@ -16,8 +16,9 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config_auto.h"
-#include "baseapi.h"
 #endif
+
+#include <tesseract/baseapi.h>
 
 #ifdef DISABLED_LEGACY_ENGINE
 

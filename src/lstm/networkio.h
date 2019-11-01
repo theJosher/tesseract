@@ -23,8 +23,8 @@
 #include <cstdio>
 #include <vector>
 
-#include "genericvector.h"
-#include "helpers.h"
+#include <tesseract/genericvector.h>
+#include <tesseract/helpers.h>
 #include "static_shape.h"
 #include "stridemap.h"
 #include "weightmatrix.h"
@@ -338,10 +338,6 @@ class NetworkIO {
   bool int_mode_;
   // Stride for 2d input data.
   StrideMap stride_map_;
-  // Holds the optimal integer multiplier for this machine.
-  // This is a leaked, lazily initialized singleton, and is used for computing
-  // padding to apply to i_ for SIMD use.
-  static IntSimdMatrix* multiplier_;
 };
 
 }  // namespace tesseract.

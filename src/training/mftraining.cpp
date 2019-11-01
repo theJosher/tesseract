@@ -20,14 +20,15 @@
 /*----------------------------------------------------------------------------
           Include Files and Type Defines
 ----------------------------------------------------------------------------*/
+
+#define _USE_MATH_DEFINES       // for M_PI
 #ifdef HAVE_CONFIG_H
 #include "config_auto.h"
 #endif
 
+#include <cmath>                // for M_PI
 #include <cstring>
 #include <cstdio>
-#define _USE_MATH_DEFINES
-#include <cmath>
 
 #include "classify.h"
 #include "cluster.h"
@@ -35,7 +36,7 @@
 #include "commontraining.h"
 #include "featdefs.h"
 #include "fontinfo.h"
-#include "genericvector.h"
+#include <tesseract/genericvector.h>
 #include "indexmapbidi.h"
 #include "intproto.h"
 #include "mastertrainer.h"
@@ -54,12 +55,8 @@ using tesseract::MasterTrainer;
 using tesseract::Shape;
 using tesseract::ShapeTable;
 
-#define PROGRAM_FEATURE_TYPE "mf"
-
 // Max length of a fake shape label.
 const int kMaxShapeLabelLength = 10;
-
-DECLARE_STRING_PARAM_FLAG(test_ch);
 
 /*----------------------------------------------------------------------------
             Public Code
@@ -275,8 +272,8 @@ int main (int argc, char **argv) {
   // Now write the inttemp and pffmtable.
   trainer->WriteInttempAndPFFMTable(trainer->unicharset(), *unicharset,
                                     *shape_table, float_classes,
-                                    inttemp_file.string(),
-                                    pffmtable_file.string());
+                                    inttemp_file.c_str(),
+                                    pffmtable_file.c_str());
   for (int c = 0; c < unicharset->size(); ++c) {
     FreeClassFields(&float_classes[c]);
   }

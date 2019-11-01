@@ -16,8 +16,9 @@
 // limitations under the License.
 ///////////////////////////////////////////////////////////////////////
 
+#include <memory>               // std::unique_ptr
 #include <time.h>
-#include "baseapi.h"
+#include <tesseract/baseapi.h>
 #include "include_gunit.h"
 
 namespace {
@@ -35,7 +36,7 @@ class QuickTest : public testing::Test {
 };
 
 void LangLoader(const char* lang, const char* tessdatadir) {
-  tesseract::TessBaseAPI* api = new tesseract::TessBaseAPI();
+  std::unique_ptr<tesseract::TessBaseAPI> api(new tesseract::TessBaseAPI());
   ASSERT_FALSE(api->Init(tessdatadir, lang))
       << "Could not initialize tesseract for $lang.";
   api->End();
